@@ -17,10 +17,16 @@ CREATE TABLE MUSICIAN (
 	name VARCHAR(255) NOT NULL,
 	birth DATE NOT NULL,
 	death DATE,
-	gender VARCHAR(255) NOT NULL,
+	gender VARCHAR(255),
 	nationality VARCHAR(255) NOT NULL,
 	CONSTRAINT PK_MUSICIAN PRIMARY KEY(id_musician),
-   CONSTRAINT CHECK_DEATH CHECK (death IS NULL OR birth < death));
+    CONSTRAINT CHECK_DEATH CHECK (death IS NULL OR birth < death),
+    CONSTRAINT CHECK_GENDER CHECK (gender IN ('M', 'F'))
+
+	
+
+
+   );
 
 CREATE TABLE BAND (
 	id_band SMALLINT,
@@ -30,7 +36,10 @@ CREATE TABLE BAND (
 	style VARCHAR(255) NOT NULL,
 	origin VARCHAR(255) NOT NULL,
     CONSTRAINT PK_BAND PRIMARY KEY(id_band),
-    CONSTRAINT STYLE_VALID CHECK (style IN ('Blues', 'Country', 'Heavy', 'Jazz', 'Pop', 'Punk', 'Reggae', 'Rock', 'Soul', 'Thrash', 'Techno')));
+	CONSTRAINT CHECK_DISS CHECK(year_dissolution IS NULL OR year_dissolution > year_formed),
+    CONSTRAINT STYLE_VALID CHECK (style IN ('Blues', 'Country', 'Heavy', 'Jazz', 'Pop', 'Punk', 'Reggae', 'Rock', 'Soul', 'Thrash', 'Techno'))
+    
+);
 
 CREATE TABLE ALBUM (
 	id_album SMALLINT,
@@ -45,23 +54,29 @@ CREATE TABLE MEMBER (
 	id_band SMALLINT, 
 	instrument VARCHAR(255),
 	CONSTRAINT PK_MEMBER PRIMARY KEY(id_musician, id_band, instrument),
-	CONSTRAINT CHECK_INSTRUMENT CHECK (instrument IN ('Bass', 'Drums', 'Guitar', 'Keyboard', 'Vocals', 'Trumpet', 'Clarinet', 'Oboe', 'Flute')));
+	CONSTRAINT FK_BAND FOREIGN KEY (id_band) REFERENCES BAND(id_band),
+	CONSTRAINT FK_MUSICIAN FOREIGN KEY (id_musician) REFERENCES MUSICIAN(id_musician),
+	CONSTRAINT CHECK_INSTRUMENT CHECK (instrument IN ('Bass', 'Drums', 'Guitar', 'Keyboard', 'Vocals', 'Trumpet', 'Clarinet', 'Oboe', 'Flute'))
+
+	);
 
 CREATE TABLE COMPOSER(
 	id_musician SMALLINT,
 	id_song SMALLINT,
-	year SMALLINT NOT NULL,
+	awards SMALLINT,
+
 	CONSTRAINT PK_COMPOSER PRIMARY KEY(id_musician, id_song),
+	CONSTRAINT CHECK_AWARD CHECK(awards >= 0),
 	CONSTRAINT FK_MUSICIAN_COMPOSER FOREIGN KEY (id_musician) REFERENCES MUSICIAN(id_musician) ON UPDATE CASCADE);
+
 COMMIT;
 
-
-
-CREATE TABLE ubd_20202."SONG"(
+CREATE TABLE SONG(
 	id_song SMALLINT,
-	duration SMALLINT NOT NULL,
+	title_song VARCHAR(255) NOT NULL,
+	duration TIME NOT NULL,
 	id_album SMALLINT,
 	CONSTRAINT PK_SONG PRIMARY KEY(id_song),
-	CONSTRAINT FK_MUSICIAN_COMPOSER FOREIGN KEY (id_album) REFERENCES ALBUM(id_album) ON UPDATE CASCADE);
+	CONSTRAINT FK_ALBUM FOREIGN KEY (id_album) REFERENCES ALBUM(id_album) ON UPDATE CASCADE);
 COMMIT;
 
