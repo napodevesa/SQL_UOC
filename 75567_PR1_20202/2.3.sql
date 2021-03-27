@@ -1,3 +1,5 @@
+--Author: Napoleón Devesa
+
 SET search_path TO 'ubd_20202';
 select distinct band.name, band.year_formed, count(distinct album.id_album), count(distinct member.id_musician)
 from album
