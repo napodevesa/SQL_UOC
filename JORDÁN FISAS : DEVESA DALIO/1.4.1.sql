@@ -1,0 +1,7 @@
+SET search_path TO 'ubd_20202';
+
+ALTER TABLE MUSICIAN
+
+ALTER COLUMN gender DROP NOT NULL;
+
+;

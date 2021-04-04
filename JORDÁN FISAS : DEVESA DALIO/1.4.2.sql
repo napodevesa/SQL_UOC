@@ -1,0 +1,6 @@
+SET search_path TO 'ubd_20202';
+
+ALTER TABLE MUSICIAN
+ADD CONSTRAINT CHECK_GENDER CHECK (gender IN ('M', 'F'))
+
+;
